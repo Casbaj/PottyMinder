@@ -25,19 +25,21 @@ public final class R {
         public static final int blue=0x7f020001;
         public static final int green=0x7f020002;
         public static final int ic_launcher=0x7f020003;
-        public static final int orange=0x7f020004;
-        public static final int other1=0x7f020005;
-        public static final int other2=0x7f020006;
-        public static final int pink=0x7f020007;
-        public static final int red=0x7f020008;
-        public static final int violate=0x7f020009;
-        public static final int yellow=0x7f02000a;
+        public static final int kgari=0x7f020004;
+        public static final int orange=0x7f020005;
+        public static final int other1=0x7f020006;
+        public static final int other2=0x7f020007;
+        public static final int pink=0x7f020008;
+        public static final int red=0x7f020009;
+        public static final int violate=0x7f02000a;
+        public static final int yellow=0x7f02000b;
     }
     public static final class id {
-        public static final int action_settings=0x7f080004;
+        public static final int action_settings=0x7f080005;
         public static final int bubbleTextView1=0x7f080000;
         public static final int button1=0x7f080001;
         public static final int button2=0x7f080003;
+        public static final int profileImage=0x7f080004;
         public static final int txtTimer=0x7f080002;
     }
     public static final class layout {

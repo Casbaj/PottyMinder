@@ -61,15 +61,15 @@ public class MainActivity extends Activity {
 
 			int seconds = (int) (finalTime / 1000);
 			int minutes = seconds / 60;
+			int hours = minutes % 60;
 			seconds = seconds % 60;
 			int milliseconds = (int) (finalTime % 1000);
-			txtTimer.setText("" + minutes + ":"
-					+ String.format("%02d", seconds) + ":"
-					+ String.format("%03d", milliseconds));
 			
-			bubbleTimer.setText("" + minutes + ":"
+			bubbleTimer.setTimer(hours, minutes, seconds);
+			
+			/*bubbleTimer.setText("" + minutes + ":"
 					+ String.format("%02d", seconds) + ":"
-					+ String.format("%03d", milliseconds));
+					+ String.format("%03d", milliseconds));*/
 			
 			myHandler.postDelayed(this, 0);
 		}
