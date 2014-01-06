@@ -79,7 +79,7 @@ public class BubbleTextView extends View {
 		int height = Math.max(rect.height(), getSuggestedMinimumHeight())
 				+ paddingTop + paddingBottom;
 
-		setMeasuredDimension(225,225);
+		setMeasuredDimension(310, 150);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class BubbleTextView extends View {
 		int x = paddingLeft;
 		int y = paddingTop;
 		
-		if (mSeconds > 0) {
+		if (!isInEditMode()) {
 			canvas.drawBitmap(mHourBubble, x, y+25, mHoursPaint);
 			canvas.drawText(String.format("%02d", mHours), x + (100/5) + (40/2) , y + 25 + (100/2) + (40/8), mHoursPaint);
 			

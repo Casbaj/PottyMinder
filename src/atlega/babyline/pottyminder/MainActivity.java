@@ -1,11 +1,20 @@
 package atlega.babyline.pottyminder;
 
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -20,15 +29,36 @@ public class MainActivity extends Activity {
 	private int direction;
 	private final int DIRECTION_UP = 0;
 	private final int DIRECTION_DOWN = 1;
+	private GraphicalView mGraphView;
+    private XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
+    private XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
+    private XYSeries mCurrentSeries;
+    private XYSeriesRenderer mCurrentRenderer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		txtTimer = (TextView) findViewById(R.id.txtTimer);
 		bubbleTimer = (BubbleTextView) findViewById(R.id.bubbleTextView1);
+		bubbleTimer.setTimer(0, 0, 0);
 		direction = DIRECTION_DOWN;
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+        LinearLayout layout = (LinearLayout) findViewById(R.id.chartLayout);
+        if (mGraphView == null) {
+            initGraph();
+            addSampleData();
+            mGraphView = ChartFactory.getCubeLineChartView(this, mDataset, mRenderer, 0.3f);
+            mGraphView.setBackgroundColor(Color.TRANSPARENT);
+            mGraphView.setPadding(0, 0, 0, 0);
+            layout.addView(mGraphView);
+        } else {
+        	mGraphView.repaint();
+        }
 	}
 
 	@Override
@@ -75,4 +105,27 @@ public class MainActivity extends Activity {
 		}
 
 	};
+
+	private void initGraph(){
+        mCurrentSeries = new XYSeries("Sample Data");
+        mDataset.addSeries(mCurrentSeries);
+        mCurrentRenderer = new XYSeriesRenderer();
+        mRenderer.addSeriesRenderer(mCurrentRenderer);
+        mRenderer.setApplyBackgroundColor(true);
+        mRenderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
+        mRenderer.setBackgroundColor(Color.argb(0x00, 0x01, 0x01, 0x01));
+        mRenderer.setLabelsColor(Color.BLUE);
+        mRenderer.setAxesColor(Color.BLUE);
+        mRenderer.setLabelsTextSize(10);
+        mRenderer.setXLabelsColor(Color.BLUE);
+        mRenderer.setYLabelsColor(0, Color.BLUE);
+	}
+	
+    private void addSampleData() {
+        mCurrentSeries.add(1, 2);
+        mCurrentSeries.add(2, 3);
+        mCurrentSeries.add(3, 2);
+        mCurrentSeries.add(4, 5);
+        mCurrentSeries.add(5, 4);
+    }
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ * Code taken from http://stackoverflow.com/questions/16208365/create-circular-image-view-in-android 04 Jan 2014
  */
 package atlega.babyline.pottyminder;
 
@@ -19,70 +19,76 @@ import android.widget.ImageView;
 
 /**
  * @author KMatshaba
- *
+ * 
  */
 public class RoundImageView extends ImageView {
 
-		public RoundImageView(Context context) {
-		    super(context);
-		    // TODO Auto-generated constructor stub
+	public RoundImageView(Context context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+	}
+
+	public RoundImageView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
+	public RoundImageView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+	}
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+		Drawable drawable = getDrawable();
+
+		if (drawable == null) {
+			return;
 		}
-
-		public RoundImageView(Context context, AttributeSet attrs) {
-		    super(context, attrs);
+		if (getWidth() == 0 || getHeight() == 0) {
+			return;
 		}
+		Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+		Bitmap resizedBitmap = Bitmap.createScaledBitmap(b, 100, 100, false);
+		Bitmap bitmap = resizedBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-		public RoundImageView(Context context, AttributeSet attrs, int defStyle) {
-		    super(context, attrs, defStyle);
-		}
+		int w = getWidth(), h = getHeight();
 
-		@Override
-		protected void onDraw(Canvas canvas) {
+		Bitmap roundBitmap = getCroppedBitmap(bitmap, /*w*/100);
+		canvas.drawBitmap(roundBitmap, 0, 0, null);
+	}
 
-		    Drawable drawable = getDrawable();
+	
+	
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		
+		setMeasuredDimension(100, 100);
+	}
 
-		    if (drawable == null) {
-		        return;
-		    }
-		    if (getWidth() == 0 || getHeight() == 0) {
-		        return; 
-		    }
-		    Bitmap b =  ((BitmapDrawable)drawable).getBitmap() ;
-		    Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
+	public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
+		Bitmap sbmp;
+		if (bmp.getWidth() != radius || bmp.getHeight() != radius)
+			sbmp = Bitmap.createScaledBitmap(bmp, radius, radius, false);
+		else
+			sbmp = bmp;
+		Bitmap output = Bitmap.createBitmap(sbmp.getWidth(), sbmp.getHeight(),
+				Config.ARGB_8888);
+		Canvas canvas = new Canvas(output);
 
-		    int w = getWidth(), h = getHeight();
+		final int color = 0xffa19774;
+		final Paint paint = new Paint();
+		final Rect rect = new Rect(0, 0, sbmp.getWidth(), sbmp.getHeight());
 
+		paint.setAntiAlias(true);
+		paint.setFilterBitmap(true);
+		paint.setDither(true);
+		canvas.drawARGB(0, 0, 0, 0);
+		paint.setColor(Color.parseColor("#BAB399"));
+		canvas.drawCircle(sbmp.getWidth() / 2 + 0.7f,
+				sbmp.getHeight() / 2 + 0.7f, sbmp.getWidth() / 2 + 0.1f, paint);
+		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+		canvas.drawBitmap(sbmp, rect, rect, paint);
 
-		    Bitmap roundBitmap =  getCroppedBitmap(bitmap, w);
-		    canvas.drawBitmap(roundBitmap, 0,0, null);
-
-		}
-
-		public static Bitmap getCroppedBitmap(Bitmap bmp, int radius) {
-		    Bitmap sbmp;
-		    if(bmp.getWidth() != radius || bmp.getHeight() != radius)
-		        sbmp = Bitmap.createScaledBitmap(bmp, radius, radius, false);
-		    else
-		        sbmp = bmp;
-		    Bitmap output = Bitmap.createBitmap(sbmp.getWidth(),
-		            sbmp.getHeight(), Config.ARGB_8888);
-		    Canvas canvas = new Canvas(output);
-
-		    final int color = 0xffa19774;
-		    final Paint paint = new Paint();
-		    final Rect rect = new Rect(0, 0, sbmp.getWidth(), sbmp.getHeight());
-
-		    paint.setAntiAlias(true);
-		    paint.setFilterBitmap(true);
-		    paint.setDither(true);
-		    canvas.drawARGB(0, 0, 0, 0);
-		    paint.setColor(Color.parseColor("#BAB399"));
-		    canvas.drawCircle(sbmp.getWidth() / 2+0.7f, sbmp.getHeight() / 2+0.7f,
-		            sbmp.getWidth() / 2+0.1f, paint);
-		    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-		    canvas.drawBitmap(sbmp, rect, rect, paint);
-
-
-		            return output;
-		}
+		return output;
+	}
 }
